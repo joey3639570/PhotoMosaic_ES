@@ -1,8 +1,8 @@
+import os
 from django.shortcuts import redirect, render
 from .models import Document
 from .forms import DocumentForm
 from .mosaic import mosaic
-from background_task import background
 
 def my_view(request):
     print(f"Great! You're using Python 3.6+. If you fail here, use the right version.")
@@ -23,11 +23,15 @@ def my_view(request):
 
     # Load documents for the list page
     documents = Document.objects.all()
-    refresh_image()
     # Render list page with the documents and the form
     context = {'documents': documents, 'form': form, 'message': message}
     return render(request, 'list.html', context)
 
-@background(schedule=60)
-def refresh_image():
-    mosaic('/static/images/graduation_result.jpg','/media/documents/')
+def mosaicing_view(request):
+    return render(request, 'index.html')
+
+def mosaicing(request):
+    print('Button Clicked! Performing Photo Mosaic.')
+    print(os.getcwd())
+    mosaic('static/images/graduation_final.jpg','media/documents')
+    return render(request, 'index.html')

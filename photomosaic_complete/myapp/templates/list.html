@@ -8,7 +8,7 @@
     <body>
 	<!-- Mosaic Picture -->
 	{% load static %}
-	<img id="img"src="{% static "images/graduation_final.jpg" %}" alt="My image" onclick="reloadimg()" style='height: 100%; width: 100%; object-fit: contain' />
+	<img id="img"src="{% static "images/mosaic.jpeg" %}" alt="My image" onclick="reloadimg()" style="width:1024px;height:768px; object-fit: contain" />
 	<br>
         <!-- List of uploaded documents -->
         {% if documents %}
@@ -38,67 +38,6 @@
             <p><input type="submit" value="Upload"/></p>
         </form>
     </body>
-    <script>
-  var firebaseConfig = {
-    apiKey: "AIzaSyCbXJ1BHRdFCONjz94AoxWCSabyAIS-c2E",
-    authDomain: "photomosaic-es.firebaseapp.com",
-    projectId: "photomosaic-es",
-    storageBucket: "photomosaic-es.appspot.com",
-    messagingSenderId: "525827625508",
-    appId: "1:525827625508:web:1fe1dfa607fb6ab7eafeb1",
-    measurementId: "G-PYY1JTE0MK"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-  function uploadimage(){
-  var storage = firebase.storage();
-  var file=document.getElementById("files").files[0];
-  var storageref=storage.ref();
-  var thisref=storageref.child(file.name).put(file);
-  thisref.on('state_changed',function(snapshot) {
-  console.log('Done');
-
-  }, function(error) {
-  console.log('Error',error);
-
-}, function() {
-  // Uploaded completed successfully, now we can get the download URL
-  thisref.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-    console.log('File available at', downloadURL);
-    document.getElementById("url").value=downloadURL;
-    alert('uploaded successfuly');
-    saveMessage(downloadURL);
-  });
-});
-  // Get values
-  var url = getInputVal('url');
-  // Save message
-  saveMessage(url);
-  function getInputVal(id){
-    document.getElementById('contactForm').reset();
-
-}
-
-
-// Function to get get form values
-function getInputVal(id){
-  return document.getElementById(id).value;
-}
-
-// Save message to firebase database
-function saveMessage(url){
-  var newMessageRef = messagesRef.push();
-  newMessageRef.set({
-   imageurl:url,
-  });
-}
-}
-setInterval(function() {
-    var myImageElement = document.getElementById('myImage');
-    myImageElement.src = 'screen.jpg?rand=' + Math.random();
-}, 5000);
-</script>
 <script>
     function reloadimg(){
         var src = "{% static 'images/mosaic.jpeg' %}";
@@ -107,5 +46,30 @@ setInterval(function() {
         imageObject.src = src;  
     }
 </script>
+<script>
+function refresh(node)
+{
+   var times = 10000; // gap in Milli Seconds;
 
+   (function startRefresh()
+   {
+      var address;
+      if(node.src.indexOf('?')>-1)
+       address = node.src.split('?')[0];
+      else
+       address = node.src;
+      node.src = address+"?time="+new Date().getTime();
+
+      setTimeout(startRefresh,times);
+   })();
+
+}
+
+window.onload = function()
+{
+  var node = document.getElementById('img');
+  refresh(node);
+  // you can refresh as many images you want just repeat above steps
+}
+</script>
 </html>
