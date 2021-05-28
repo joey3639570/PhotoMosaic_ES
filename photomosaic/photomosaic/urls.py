@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from photomosaic.views import hello, check
+from photomosaic.views import hello, check, logout
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('friend/', hello),
 
-    path('check/', check),
+    path('check/', check, name="check"),
 ]
